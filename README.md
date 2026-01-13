@@ -79,7 +79,7 @@ bash multi_analysis.sh
 ```
 
 Upon completion:
-- **Figures** are saved in the [`Figures/`](Figures/) directory.  
+- **Figures** are saved in the [`analysis/Figures/`](Figures/) directory.  
 - **Analyzed objects** (in `.pkl` format) are saved in the [`analysis/objects/`](objects/) directory for faster future access.
 
 The `.pkl` files contain precomputed analysis results, allowing users to regenerate figures without reloading trajectories.
@@ -98,10 +98,11 @@ ALG9_project/
 │   └── MD.sh                       # Run script for test simulations
 │
 ├── analysis/
-│   ├── ALG9_initial.ipynb          # Jupyter notebook for the analysis on the initial runs
-│                                     with a guessed donor binding pose
-│   ├── ALG9.ipynb                  # Jupyter notebook for the analysis on the later runs 
-|                                     from the binding pose revealed from the initial runs
+│   ├── ALG8_pre_transfer.ipynb     # Jupyter notebook for the pretransfer analysis from objects/*.pkl
+│   ├── ALG8_post_transfer.ipynb    # Jupyter notebook for the posttransfer analysis from objects/*.pkl
+|   ├── ALG8_class.py               # python file that defines the class
+|   ├── ALG8_analysis.py            # python file to interface with the bashscript and create object from the ALG8 class
+|   ├── multi_analysis.sh           # Iteratively call ALG8_analysis to read MD trajectories and create objects
 │   ├── objects/                    # Stored analyzed data (.pkl files)
 │   └── Figures/                    # Auto-generated figures
 │
@@ -119,7 +120,6 @@ ALG9_project/
 ---
 
 ## Trajectories of the Published Work
-Due to the large filesize (> 20GB without solvents), MD trajectories are provided upon request at sriniker@ethz.ch.
 
 ---
 

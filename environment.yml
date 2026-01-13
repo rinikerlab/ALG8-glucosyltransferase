@@ -1,0 +1,14 @@
+name: ALG8_pytraj
+channels:
+  - conda-forge
+  - ambermd
+dependencies:
+  - python=3.6
+  - numpy
+  - pandas
+  - matplotlib
+  - pytraj
+  - seaborn
+  - pygments
+  - jupyterlab
+  - ipykernel
