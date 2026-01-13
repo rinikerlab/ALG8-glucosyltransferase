@@ -1,93 +1,132 @@
-# ALG8
+# ALG8 Membrane-Embedded Mannosyltransferase Simulation and Analysis
 
+(This project is an successive project from https://github.com/rinikerlab/ALG_mannosyltransferase)
+## Overview
+This repository contains molecular dynamics (MD) simulations and trajectory analyses of the **membrane-embedded glucosyltransferase ALG8**.  
+The goal of this project is to understand the donor selectivity and key interactions of ALG8 during glycosylation.
 
+### Scientific Questions
+This study aims to answer three main questions:
 
-## Getting started
+1. **What makes the mutant D36N keep the product** after the catalysis?   
+2. **What determines ALG8’s selectivity** toward the glucose donor compared to mannose? 
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+To address these:
+- (b) Simulations with **mannose** and **gluvose** donors and were conducted to assess donor selectivity in the pre-transfer state.
+- (c) Simulations with **D36 (wildtype)** and **D36N (mutant)** and were conducted to assess product stability in the post-transfer state.
+- (c) All possible protonation state of H40 ($\delta$, $\epsilon$, and double) are studied to investigate the role of this amino acid.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+## MD Simulations
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Example MD simulation input files are provided in the folder [`MDsimulations/`](MDsimulations/).  
+For quick testing, the demonstration protocol uses **50× fewer steps** to allow short test runs.
 
+You can run the short test directly by executing:
+
+```bash
+bash MD.sh
 ```
-cd existing_repo
-git remote add origin https://gitlab.ethz.ch/rinikerlab/ALG8.git
-git branch -M main
-git push -uf origin main
+
+This script performs **energy minimization, equilibration, and production** in sequence.
+
+### Running Full-Length Simulations
+To perform full-length production runs, replace the demonstration input files with the ones in  
+[`MDsimulations/longer_input_files/`](MDsimulations/longer_input_files/).
+
+### System Composition
+| Component | Description |
+|------------|-------------|
+| Protein | ALG8 glocosyltransferase |
+| Substrates | Acceptor and donor |
+| Membrane | POPC bilayer (constructed via CHARMM-GUI) |
+| Solvent | OPC water |
+| Ions | 0.15 M NaCl |
+| Force fields | `ff19SB` (protein), `Lipid21` (lipid), `GAFF2` (substrates), `opc` (water) |
+
+### Simulation Environment
+| Item | Description |
+|------|-------------|
+| MD Engine | AMBER 24 |
+| GPU | RTX 3090 Ti (approx. 2 h → 10 ns) |
+| OS | Linux (tested), should work on other platforms supporting AMBER and Python |
+| Reproducibility | Test inputs are already minimized; random seeds are not fixed |
+
+A full list of Python dependencies is provided in [`environment.yml`](environment.yml).
+
+---
+
+##  Trajectory Analysis
+
+All trajectory analysis is performed in **Python** (Jupyter Notebook) using:
+- `numpy` and `pytraj` for data processing  
+- `matplotlib` and `seaborn` for visualization  
+
+The analysis scripts automatically compute:
+
+- RMSD  
+- RMSF  
+- Interatomic distances  
+- Interatomic angles
+- Hydrogen bonds
+
+### Usage
+By specifying the folder containing topology and trajectory files, all analyses can be executed with:
+
+```python
+bash multi_analysis.sh
 ```
 
-## Integrate with your tools
+Upon completion:
+- **Figures** are saved in the [`Figures/`](Figures/) directory.  
+- **Analyzed objects** (in `.pkl` format) are saved in the [`analysis/objects/`](objects/) directory for faster future access.
 
-- [ ] [Set up project integrations](https://gitlab.ethz.ch/rinikerlab/ALG8/-/settings/integrations)
+The `.pkl` files contain precomputed analysis results, allowing users to regenerate figures without reloading trajectories.
 
-## Collaborate with your team
+All plots included in the related publication are automatically produced during analysis.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+---
 
-## Test and Deploy
+##  Repository Structure
+```
+ALG9_project/
+│
+├── MDsimulations/
+│   ├── input_files/                # Example minimized test inputs
+│   ├── longer_input_files/         # Full-length production inputs
+│   └── MD.sh                       # Run script for test simulations
+│
+├── analysis/
+│   ├── ALG9_initial.ipynb          # Jupyter notebook for the analysis on the initial runs
+│                                     with a guessed donor binding pose
+│   ├── ALG9.ipynb                  # Jupyter notebook for the analysis on the later runs 
+|                                     from the binding pose revealed from the initial runs
+│   ├── objects/                    # Stored analyzed data (.pkl files)
+│   └── Figures/                    # Auto-generated figures
+│
+├── environment.yml                 # Python environment specification
+└── README.md                       # This file
+```
 
-Use the built-in continuous integration in GitLab.
+---
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## Notes for Users
 
-***
+- To analyze your own trajectories, modify the input paths in the notebook or analysis script to point to your topology and trajectory files.  
+- The workflow has been tested on Linux and should be portable to macOS or Windows if AMBER and Python dependencies are available.  
+- GPU acceleration (CUDA) is highly recommended for production-length simulations.
+---
 
-# Editing this README
+## Trajectories of the Published Work
+Due to the large filesize (> 20GB without solvents), MD trajectories are provided upon request at sriniker@ethz.ch.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+---
 
-## Suggestions for a good README
+---
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
-## Name
-Choose a self-explaining name for your project.
+> **Citation:**  
+> *To be added once the manuscript DOI becomes available.*
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+---
