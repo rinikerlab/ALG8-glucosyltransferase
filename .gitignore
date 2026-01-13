@@ -1,6 +1,9 @@
-# Figure
-./Figures/*
+# Figures directory
+Figures/
 
-# objects
-./analysis/objects/*
+# objects under analysis
+analysis/objects/
 
+# temperally
+*.swp
+*.pyc
