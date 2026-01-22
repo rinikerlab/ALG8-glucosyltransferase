@@ -28,6 +28,7 @@ for H40 in "${H40_state[@]}"; do
             prefix="ALG8_${act}_${H40}_post_transfer"
         fi
         python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 4000
+        # echo "python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 4000"
     done
 done
 

@@ -41,11 +41,13 @@ class ALG_simulations():
                  A_sugar = ['C70','C71','C72','C73','C74','O58'],  # Acceptor sugar 
                  B_sugar = ['C52','C53','C54','C55','C56','O43'],  # Acceptor B-branch last sugar carbon
                  C_sugar = ['C58','C59','C60','C61','C52','O48'],  # Donor sugar carbon
-                 D_sugar = ['C25','C26','C27','C28','C39','O7' ],  # Donor sugar carbon
+                 D_sugar = ['C25','C26','C27','C28','C29','O7' ],  # Donor sugar carbon
                  lid_helix = [25,40],  # Residue IDs of the lid helix (T35-L50)
                  helix_loop = [150,155] ,  # Residue IDs of the helix loop (H160-Y155)
+                 C_sugar_O   = ['O55','O56','O57','O59','O58'],
+                 D_sugar_O   = ['O3','O4','O5','O6','O7'],
                  acceptor_O=':513@O56', acceptor_H=':513@H120',  # Acceptors
-                 donor_C1=':514@C25', donor_H =':514@H47', donor_C4 =':514@C28',       # Donors of DSG for bending angle and acceptor-donor angle
+                 donor_H =':514@H47',       # Donors of DSG for bending angle and acceptor-donor angle
                  resid_offset = 10, Donor_substrate= True,  # Whether the donor is a substrate
                  ):
         # Load parameters
@@ -60,9 +62,6 @@ class ALG_simulations():
          # atom selections
         self.acceptor_O = acceptor_O
         self.acceptor_H = acceptor_H
-        # C1 and C4 are used to calculate the bending angle
-        self.donor_C1 = donor_C1
-        self.donor_C4 = donor_C4
         # H is used to calculate the angle with acceptor O
         self.donor_H = donor_H
         # sugar groups for RMSD calculations
@@ -70,14 +69,17 @@ class ALG_simulations():
         self.A_sugar = A_sugar
         self.B_sugar = B_sugar
         self.C_sugar = C_sugar
+        self.C_sugar_O = C_sugar_O
         self.D_sugar = D_sugar
+        self.D_sugar_O = D_sugar_O
         # lid helix and helix loop for hbond calculations
         self.lid_helix = lid_helix
         self.helix_loop = helix_loop
 
 
-        # Calculation        
-        self.run_analyze()
+        # Calculation
+        # self.run_analyze()
+
 
 
     def run_analyze(self):
@@ -86,19 +88,21 @@ class ALG_simulations():
         self.traj.superpose(mask=f':1-{self.AS_id-1}&!(@H*)')
         ## RMSD, RMSF calculation
         self.calculate_rmsd_rmsf()
-        self.calculate_hbond_protein_substrate()
-        self.calculate_hbond_protein_inter()
+        self.calculate_Hbond_onego()
+        # self.calculate_hbond_protein_substrate()
+        # self.calculate_hbond_protein_inter()
         # calculate other metrics
-        self.calculate_lid_helix_hbond()           
+        # self.calculate_lid_helix_hbond()           
         
         
         if self.Donor_substrate:
-            self.calculate_sugar_phosphate_hbond()
-            self.acceptor_donor_angle = self.calculate_angle(self.acceptor_O, self.donor_C1, self.donor_H)
-            self.acceptor_donor_distance = pt.distance(self.traj,self.acceptor_O + ' '+ self.donor_C1)
-            self.donor_bending_angle = self.calculate_angle(f':{self.DS_id}@P', f'{self.donor_C1}', f'{self.donor_C4}')
+            # self.calculate_sugar_phosphate_hbond()
+            self.acceptor_donor_angle = self.calculate_angle(self.acceptor_O, f':{self.DS_id}@{self.D_sugar[0]}', self.donor_H)
+            self.acceptor_donor_distance = pt.distance(self.traj,self.acceptor_O + ' '+ f':{self.DS_id}@{self.D_sugar[0]}')
+            self.donor_bending_angle = self.calculate_angle(f':{self.DS_id}@P', f':{self.DS_id}@{self.D_sugar[0]}', f':{self.DS_id}@{self.D_sugar[3]}')
+            self.donor_bending_angle2 = self.calculate_angle(f':{self.DS_id}@P', f':{self.DS_id}@{self.D_sugar[0]}', f':{self.DS_id}@{self.D_sugar[4]}')
         else:
-            self.calculate_sugar_phosphate_hbond()
+            # self.calculate_sugar_phosphate_hbond()
             self.acceptor_donor_angle = None
             self.acceptor_donor_distance = None
             self.donor_bending_angle = None
@@ -175,4 +179,91 @@ class ALG_simulations():
             self.intra_hydrogen_bonds  = DS_hbond.data[0].values
 
 
+    def calculate_Hbond_onego(self):
+        Hbond_mask = ':'+','.join(str(id) for id in self.rec_ids)+f",{self.AS_id},{self.DS_id}"
+        Hbond = pt.hbond(self.traj, Hbond_mask)
+        print(Hbond.donor_acceptor[:5])
+        # donor_ids = [pair.split('-')[0][3:].split('_')[0] for pair in Hbond.donor_acceptor]
+        # acceptor_ids = [pair.split('-')[1][3:].split('_')[0] for pair in Hbond.donor_acceptor]
 
+        self_hbonds = np.zeros((len(self.rec_ids)+2, len(self.rec_ids)+2, len(self.traj)))
+        self.C_sugar_hbond = np.zeros((len(self.C_sugar_O), len(self.rec_ids)+2,  len(self.traj)))
+        self.D_sugar_hbond = np.zeros((len(self.D_sugar_O), len(self.rec_ids)+2,  len(self.traj)))
+
+        for i_pair, pair in enumerate(Hbond.donor_acceptor):
+            donor_id = int(pair.split('-')[1][3:].split('_')[0])
+            acceptor_id = int(pair.split('-')[0][3:].split('_')[0])
+            donor_name = pair.split('-')[1][3:].split('_')[1]
+            acceptor_name    = pair.split('-')[0][3:].split('_')[1]
+            # find donor
+            if donor_id in self.rec_ids:
+                i_rec = self.rec_ids.index(donor_id)
+            elif donor_id == self.AS_id:
+                i_rec = len(self.rec_ids)
+                if pair.split('-')[0][3:].split('_')[1] in self.C_sugar_O:
+                    i_Csugar = self.C_sugar_O.index(pair.split('-')[0][3:].split('_')[1])
+                    self.C_sugar_hbond[i_Csugar, i_rec, :] += Hbond.values[i_pair+1]
+
+                # D sugar on acceptor
+                if (not self.Donor_substrate) and (pair.split('-')[0][3:].split('_')[1] in self.D_sugar_O):
+                    i_Dsugar = self.D_sugar_O.index(pair.split('-')[0][3:].split('_')[1])
+                    self.D_sugar_hbond[i_Dsugar, i_rec, :] += Hbond.values[i_pair+1]
+
+            elif donor_id == self.DS_id:
+                i_rec = len(self.rec_ids)+1
+
+            else:
+                continue
+            # find acceptor
+            if acceptor_id in self.rec_ids:
+                j_rec = self.rec_ids.index(acceptor_id)
+            elif acceptor_id == self.AS_id:
+                j_rec = len(self.rec_ids)
+                if pair.split('-')[1][3:].split('_')[1] in self.C_sugar_O:
+                    i_Csugar = self.C_sugar_O.index(pair.split('-')[1][3:].split('_')[1])
+                    self.C_sugar_hbond[i_Csugar, j_rec, :] += Hbond.values[i_pair+1]
+
+            elif acceptor_id == self.DS_id:
+                j_rec = len(self.rec_ids)+1
+
+            else:
+                continue
+            self_hbonds[i_rec,j_rec] += Hbond.values[i_pair+1]
+
+            # cound C_sugar hbonds
+            if (acceptor_id == self.AS_id) and (acceptor_name in self.C_sugar_O):
+                i_Csugar = self.C_sugar_O.index(acceptor_name)
+                self.C_sugar_hbond[i_Csugar, i_rec, :] += Hbond.values[i_pair+1]
+            if (donor_id == self.AS_id) and (donor_name in self.C_sugar_O):
+                i_Csugar = self.C_sugar_O.index(donor_name)
+                self.C_sugar_hbond[i_Csugar, j_rec, :] += Hbond.values[i_pair+1]
+            
+            # count D_sugar hbonds
+            if self.Donor_substrate:
+                if (acceptor_id == self.DS_id) and (acceptor_name in self.D_sugar_O):
+                    i_Dsugar = self.D_sugar_O.index(acceptor_name)
+                    self.D_sugar_hbond[i_Dsugar, i_rec, :] += Hbond.values[i_pair+1]
+                if (donor_id == self.DS_id) and (donor_name in self.D_sugar_O):
+                    i_Dsugar = self.D_sugar_O.index(donor_name)
+                    self.D_sugar_hbond[i_Dsugar, j_rec, :] += Hbond.values[i_pair+1]
+            else: # D_sugar on acceptor
+                if (acceptor_id == self.AS_id) and (acceptor_name in self.D_sugar_O):
+                    i_Dsugar = self.D_sugar_O.index(acceptor_name)
+                    self.D_sugar_hbond[i_Dsugar, i_rec, :] += Hbond.values[i_pair+1]
+                if (donor_id == self.AS_id) and (donor_name in self.D_sugar_O):
+                    i_Dsugar = self.D_sugar_O.index(donor_name)
+                    self.D_sugar_hbond[i_Dsugar, j_rec, :] += Hbond.values[i_pair+1]
+        
+
+        print(self_hbonds.sum())
+        self.intra_hydrogen_bonds = self_hbonds[len(self.rec_ids):,len(self.rec_ids):] + self_hbonds[len(self.rec_ids):,len(self.rec_ids):].swapaxes(0,1)
+        self.intra_hydrogen_bonds[np.diag_indices(2)] /= 2  # correct double counting on diagonal
+        self.protein_substrates_bonds = self_hbonds[len(self.rec_ids):,:len(self.rec_ids)] + self_hbonds[:len(self.rec_ids),len(self.rec_ids):].swapaxes(0,1)
+        self.protein_inter_hbonds = self_hbonds[:len(self.rec_ids), :len(self.rec_ids)] + self_hbonds[:len(self.rec_ids), :len(self.rec_ids)].swapaxes(0,1)
+        self.protein_inter_hbonds[np.diag_indices(len(self.rec_ids))] /= 2  # correct double counting on diagonal
+        # print summary of hbonds
+        total_hbonds = self_hbonds.sum()
+        print(f'Total hbonds: {total_hbonds}')
+        print(f"Total protein-substrate hbonds: {self.protein_substrates_bonds.sum()}")
+        print(f"Total protein-protein hbonds: {self.protein_inter_hbonds.sum()}")
+        print(f"Total intra-substrate hbonds: {self.intra_hydrogen_bonds.sum()}")
