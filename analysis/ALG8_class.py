@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pytraj as pt
-import pytraj as pt
 import scipy
 # import rdkit
 # from rdkit import Chem
@@ -92,7 +91,7 @@ class ALG_simulations():
         # self.calculate_hbond_protein_substrate()
         # self.calculate_hbond_protein_inter()
         # calculate other metrics
-        # self.calculate_lid_helix_hbond()           
+        self.calculate_lid_helix_hbond()           
         
         
         if self.Donor_substrate:
@@ -106,7 +105,8 @@ class ALG_simulations():
             self.acceptor_donor_angle = None
             self.acceptor_donor_distance = None
             self.donor_bending_angle = None
-        
+
+        self.H40_torsion_angle = pt.dihedral(self.traj, f':30@N :30@CA :30@CB :30@CG')
 
     def calculate_rmsd_rmsf(self):
         # Calculate the RMSD and RMSF of the trajectory
@@ -263,7 +263,16 @@ class ALG_simulations():
         self.protein_inter_hbonds[np.diag_indices(len(self.rec_ids))] /= 2  # correct double counting on diagonal
         # print summary of hbonds
         total_hbonds = self_hbonds.sum()
-        print(f'Total hbonds: {total_hbonds}')
-        print(f"Total protein-substrate hbonds: {self.protein_substrates_bonds.sum()}")
-        print(f"Total protein-protein hbonds: {self.protein_inter_hbonds.sum()}")
-        print(f"Total intra-substrate hbonds: {self.intra_hydrogen_bonds.sum()}")
+
+    def get_z_axis(self, file):
+        xyz = np.loadtxt(file)
+        z = xyz[:,3]
+        self.D36_z = z
+    
+    def get_electrodensity(self, file):
+        density = np.loadtxt(file)
+        self.ele_density = density
+    
+    def get_pockets(self, file):
+        pockets = np.loadtxt(file)
+        self.pocket_volumes = pockets

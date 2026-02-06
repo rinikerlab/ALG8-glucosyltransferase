@@ -3,7 +3,9 @@
 
 
 MD_path_pretransfer="/localhome/shuchen/projects/ALG8/pre_transfer/stripped/"
+MD_path_pretransfer2="/localhome/shuchen/projects/ALG8/pre_transfer/preparation_2/stripped/"
 MD_path_posttransfer="/localhome/shuchen/projects/ALG8/post_transfer/simulations/stripped/"
+
 H40_state=("none" "H40d" "H40db")
 N_run=5
 ### Pre-transfer analyses
@@ -14,8 +16,8 @@ for H40 in "${H40_state[@]}"; do
         else
             prefix="ALG8_pretransfer_${H40}_${sub}"
         fi
-        python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state "pre-$sub" --take_frame 4000
-        # echo "python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state pre-$sub --take_frame 4000"
+        # python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state "pre-$sub" --take_frame 4000
+        echo "python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state pre-$sub --take_frame 4000"
     done
 done
 
@@ -27,9 +29,15 @@ for H40 in "${H40_state[@]}"; do
         else
             prefix="ALG8_${act}_${H40}_post_transfer"
         fi
-        python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 4000
-        # echo "python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 4000"
+        # python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 6000
+        echo "python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 4000"
     done
 done
 
-# DSG
+ob_path="./objects_2/"
+### Pre-transfer analyses 2
+for sub in "DSG" "DSM"; do
+    prefix="ALG8_pretransfer_${sub}"
+    python ./ALG8_analysis.py --MD_path $MD_path_pretransfer2 --prefix $prefix --N_run $N_run --state "pre-$sub" --take_frame 4000 --ob_path $ob_path
+    # echo "python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state pre-$sub --take_frame 4000"
+done
