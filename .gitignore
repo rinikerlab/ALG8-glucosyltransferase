@@ -3,6 +3,8 @@ Figures/
 
 # objects under analysis
 analysis/objects/
+analysis/objects_2/
+analysis/objects_4/
 
 # temperally
 *.swp

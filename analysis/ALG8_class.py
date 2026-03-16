@@ -91,7 +91,7 @@ class ALG_simulations():
         # self.calculate_hbond_protein_substrate()
         # self.calculate_hbond_protein_inter()
         # calculate other metrics
-        self.calculate_lid_helix_hbond()           
+        # self.calculate_lid_helix_hbond()           
         
         
         if self.Donor_substrate:
@@ -105,8 +105,13 @@ class ALG_simulations():
             self.acceptor_donor_angle = None
             self.acceptor_donor_distance = None
             self.donor_bending_angle = None
-
-        self.H40_torsion_angle = pt.dihedral(self.traj, f':30@N :30@CA :30@CB :30@CG')
+        self.H40_torsion_chi1 = pt.dihedral(self.traj, f':30@N  :30@CA :30@CB :30@CG')
+        self.H40_torsion_chi2 = pt.dihedral(self.traj, f':30@CA :30@CB :30@CG :30@ND1')
+        
+        # other interesting hbond distance
+        self.Y67_O6_distance   = pt.distance(self.traj, f':57@HH :{self.DS_id}@{self.D_sugar_O[-1]}')
+        self.N164_O5_distance   = pt.distance(self.traj, f':154@NE2 :{self.DS_id}@{self.D_sugar_O[3]}')
+        self.N164_O6_distance   = pt.distance(self.traj, f':154@NE2 :{self.DS_id}@{self.D_sugar_O[4]}')
 
     def calculate_rmsd_rmsf(self):
         # Calculate the RMSD and RMSF of the trajectory
