@@ -261,12 +261,14 @@ class ALG_simulations():
         
 
         print(self_hbonds.sum())
+        # intra_hydrogen_bonds: hbonds within the protein and within the substrates, excluding protein-substrate hbonds
         self.intra_hydrogen_bonds = self_hbonds[len(self.rec_ids):,len(self.rec_ids):] + self_hbonds[len(self.rec_ids):,len(self.rec_ids):].swapaxes(0,1)
         self.intra_hydrogen_bonds[np.diag_indices(2)] /= 2  # correct double counting on diagonal
         self.protein_substrates_bonds = self_hbonds[len(self.rec_ids):,:len(self.rec_ids)] + self_hbonds[:len(self.rec_ids),len(self.rec_ids):].swapaxes(0,1)
         self.protein_inter_hbonds = self_hbonds[:len(self.rec_ids), :len(self.rec_ids)] + self_hbonds[:len(self.rec_ids), :len(self.rec_ids)].swapaxes(0,1)
         self.protein_inter_hbonds[np.diag_indices(len(self.rec_ids))] /= 2  # correct double counting on diagonal
         # print summary of hbonds
+        self.Donor_intra_hbonds = pt.hbond(self.traj,f':{self.DS_id}')
         total_hbonds = self_hbonds.sum()
 
     def get_z_axis(self, file):
