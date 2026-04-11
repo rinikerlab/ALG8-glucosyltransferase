@@ -1,6 +1,7 @@
 # Figures directory
 Figures/
-
+Putative_pathway/*.pse
+Putative_pathway/*.svg
 # objects under analysis
 analysis/objects/
 analysis/objects_2/

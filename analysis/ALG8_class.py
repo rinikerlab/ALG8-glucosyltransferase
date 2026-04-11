@@ -34,9 +34,9 @@ class ALG_simulations():
     def __init__(self, traj,  # Traj is a pytraj trajectory
                  AS_id = 513, # acceptor substrate id
                  DS_id = 514, # donor substrate id
-                 rec_ids=[  26,     152,   154,   373,   369,   264,   56,    30,   153,   372,  65],              # used to calculate the hbonds
-                 #            0      1      2      3      4      5      6      7     8     9     10
-                 rec_name = ['D36','H162','N164','K383','H379','R274','D66', 'H40','F163','E382','E75'],  # name of the residues
+                 rec_ids=[  26,     152,   154,   373,   369,   264,   56,    30,   153,   372,  65,    57],              # used to calculate the hbonds
+                 #            0      1      2      3      4      5      6      7     8     9     10     11 
+                 rec_name = ['D36','H162','N164','K383','H379','R274','D66', 'H40','F163','E382','E75','Y67'],  # name of the residues
                  A_sugar = ['C70','C71','C72','C73','C74','O58'],  # Acceptor sugar 
                  B_sugar = ['C52','C53','C54','C55','C56','O43'],  # Acceptor B-branch last sugar carbon
                  C_sugar = ['C58','C59','C60','C61','C52','O48'],  # Donor sugar carbon
@@ -110,8 +110,10 @@ class ALG_simulations():
         
         # other interesting hbond distance
         self.Y67_O6_distance   = pt.distance(self.traj, f':57@HH :{self.DS_id}@{self.D_sugar_O[-1]}')
+        self.D66_O4_distance   = pt.distance(self.traj, f':56@CG :{self.DS_id}@{self.D_sugar_O[2]}')
         self.N164_O5_distance   = pt.distance(self.traj, f':154@NE2 :{self.DS_id}@{self.D_sugar_O[3]}')
         self.N164_O6_distance   = pt.distance(self.traj, f':154@NE2 :{self.DS_id}@{self.D_sugar_O[4]}')
+        self.R274_O2_distance   = pt.distance(self.traj, f':264@CZ :{self.DS_id}@{self.D_sugar_O[0]}')
 
     def calculate_rmsd_rmsf(self):
         # Calculate the RMSD and RMSF of the trajectory
