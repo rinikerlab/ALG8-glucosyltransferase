@@ -1,7 +1,10 @@
 # Figures directory
 Figures/
 Putative_pathway/*.pse
+Putative_pathway/*/*.pse
+
 Putative_pathway/*.svg
+Putative_pathway/*/*.svg
 # objects under analysis
 analysis/objects/
 analysis/objects_2/
@@ -10,3 +13,4 @@ analysis/objects_4/
 # temperally
 *.swp
 *.pyc
+PDB4Figures/

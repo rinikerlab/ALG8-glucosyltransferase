@@ -142,7 +142,7 @@ class ALG_simulations():
     def calculate_angle(self, atom1, atom2, atom3): 
         return pt.angle(self.traj, atom1 + ' ' + atom2 + ' ' + atom3)
         
-    def calculate_hbond_protein_substrate(self,distance=3.0, angle=120):
+    def calculate_hbond_protein_substrate(self,distance=3.0, angle=135):
         # 0: AS, 1: DP
         self.protein_substrates_bonds  = np.zeros((2,len(self.rec_ids),len(self.traj)))
         for i_rec, rec_id in enumerate(self.rec_ids):
@@ -154,7 +154,7 @@ class ALG_simulations():
             self.protein_substrates_bonds[0,i_rec] = AS_hbond.data[0].values - rec_hbond.data[0].values - AS_intra_hbond.data[0].values
             self.protein_substrates_bonds[1,i_rec] = DP_hbond.data[0].values - rec_hbond.data[0].values - DP_intra_hbond.data[0].values
     
-    def calculate_lid_helix_hbond(self,distance=3.0, angle=120):
+    def calculate_lid_helix_hbond(self,distance=3.0, angle=135):
         lid_hbond       = pt.hbond(self.traj,f':{self.lid_helix[0]}-{self.lid_helix[-1]}',distance=distance, angle=angle)
         helix_hbond     = pt.hbond(self.traj,f':{self.helix_loop[0]}-{self.helix_loop[-1]}',distance=distance, angle=angle)
         lid_helix_hbond = pt.hbond(self.traj,f':{self.lid_helix[0]}-{self.lid_helix[-1]},{self.helix_loop[0]}-{self.helix_loop[1]}',distance=distance, angle=angle)
