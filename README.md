@@ -14,7 +14,7 @@ This study aims to answer three main questions:
 To address these:
 - (b) Simulations with **mannose** and **gluvose** donors and were conducted to assess donor selectivity in the pre-transfer state.
 - (c) Simulations with **D36 (wildtype)** and **D36N (mutant)** and were conducted to assess product stability in the post-transfer state.
-- (c) All possible protonation state of H40 ($\delta$, $\epsilon$, and double) are studied to investigate the role of this amino acid.
+- (c) All possible tautomeric state of H40 ($\delta$, $\epsilon$, and double) are studied to investigate the role of this amino acid. The double protonated state is not shown here.
 
 ---
 
