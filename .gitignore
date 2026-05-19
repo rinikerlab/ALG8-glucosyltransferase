@@ -1,5 +1,6 @@
 # Figures directory
 Figures/
+Putative_pathway
 Putative_pathway/*.pse
 Putative_pathway/*/*.pse
 Putative_pathway/*.svg
