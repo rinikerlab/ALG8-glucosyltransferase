@@ -1,50 +1,22 @@
 # this script performs multiple analyses on a given dataset
 #!/bin/bash
+stripped_home='../stripped/'
 
-
-MD_path_pretransfer="/localhome/shuchen/projects/ALG8/pre_transfer/stripped/"
-MD_path_pretransfer4="/localhome/shuchen/projects/ALG8/pre_transfer/preparation_H40db_4/stripped/"
-MD_path_posttransfer="/localhome/shuchen/projects/ALG8/post_transfer/simulations/stripped/"
-
-H40_state=("none" "H40d" "H40db")
 N_run=5
-### Pre-transfer analyses
-for H40 in "${H40_state[@]}"; do
-    for sub in "DSG" "DSM"; do
-        if [ "$H40" == "none" ]; then
-            prefix="ALG8_pretransfer_${sub}"
-        else
-            prefix="ALG8_pretransfer_${H40}_${sub}"
-        fi
-        python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state "pre-$sub" --take_frame 6000
-        # cho "python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state pre-$sub --take_frame 4000"
-    done
+
+# pretransfer
+folders=( ALG8_pretransfer_H40d_DSG ALG8_pretransfer_H40e_DSG ALG8_postransfer_H40d_D36N ALG8_pretransfer_H40e_DSM)
+prefix=( ALG8_pretransfer_H40d_DSG ALG8_pretransfer_DSG ALG8_pretransfer_H40d_DSM ALG8_pretransfer_DSM)
+for i in $(seq 0 3); do
+    python ./ALG8_analysis.py --MD_path "${stripped_home}/${folders[i]}/" --prefix "${prefix[i]}" --N_run $N_run --state "pre" --take_frame 6000
+    # echo "python ./ALG8_analysis.py --MD_path ${stripped_home}/${folders[i]}/ --prefix ${prefix[i]} --N_run $N_run --state pre --take_frame 4000"
 done
 
-### Post-transfer analyses
-for H40 in "${H40_state[@]}"; do
-    for act in "D36" "N36"; do
-        if [ "$H40" == "none" ]; then
-            prefix="ALG8_${act}_post_transfer"
-        else
-            prefix="ALG8_${act}_${H40}_post_transfer"
-        fi
-        python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 7500
-        # echo "python ./ALG8_analysis.py --MD_path $MD_path_posttransfer --prefix $prefix --N_run $N_run --state "post" --take_frame 4000"
-    done
-done
-
-ob_path="./objects_4/"
-### Pre-transfer analyses 2
-for H40 in "${H40_state[@]}"; do
-    for sub in "DSG" "DSM"; do
-        if [ "$H40" == "none" ]; then
-            prefix="ALG8_pretransfer_${sub}"
-        else
-            prefix="ALG8_pretransfer_${H40}_${sub}"
-        fi
-        # python ./ALG8_analysis.py --MD_path $MD_path_pretransfer4 --prefix $prefix --N_run $N_run --state "pre-$sub" --take_frame 6000 --ob_path $ob_path
-        # echo "python ./ALG8_analysis.py --MD_path $MD_path_pretransfer --prefix $prefix --N_run $N_run --state pre-$sub --take_frame 4000"
-    done
+# postransfer
+folders=( ALG8_postransfer_H40d ALG8_postransfer_H40e  ALG8_postransfer_H40d_D36N ALG8_postransfer_H40e_D36N)
+prefix=( ALG8_D36_H40d_post_transfer ALG8_D36_post_transfer ALG8_D36N_H40d_post_transfer ALG8_D36N_H40e_post_transfer)
+for i in $(seq 0 3); do
+    python ./ALG8_analysis.py --MD_path "${stripped_home}/${folders[i]}/" --prefix "${prefix[i]}" --N_run $N_run --state "post" --take_frame 7500
+    # echo "python ./ALG8_analysis.py --MD_path ${stripped_home}/${folders[i]}/ --prefix ${prefix[i]} --N_run $N_run --state post --take_frame 4000"
 done
 
