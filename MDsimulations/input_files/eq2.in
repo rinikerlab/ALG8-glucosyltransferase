@@ -10,7 +10,7 @@ A NVT simulation for common production-level simulations
     temp0=303.15,   ! Target temperature
 
     ! Potential energy control
-    cut=9.0,       ! nonbonded cutoff, in Angstroms
+    cut=10.0,       ! nonbonded cutoff, in Angstroms
 
     ! MD settings
     nstlim=250,  ! 25K steps, 25 ps total
