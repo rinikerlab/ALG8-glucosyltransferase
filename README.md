@@ -22,7 +22,7 @@ To address these:
 
 Example MD simulation input files are provided in the folder [`MDsimulations/`](MDsimulations/).  
 For quick testing, the demonstration protocol uses **50× fewer steps** to allow short test runs.
-
+The initial structure and amber toplogies of other systems can be bound on the zenodo site.
 You can run the short test directly by executing:
 
 ```bash
