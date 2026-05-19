@@ -5,9 +5,11 @@ Putative_pathway/*.pse
 Putative_pathway/*/*.pse
 Putative_pathway/*.svg
 Putative_pathway/*/*.svg
+
 # objects under analysis
 analysis/objects/
 analysis/old_scripts
+data/
 # temperally
 *.swp
 *.pyc

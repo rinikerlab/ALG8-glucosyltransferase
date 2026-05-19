@@ -1,6 +1,6 @@
 # this script performs multiple analyses on a given dataset
 #!/bin/bash
-stripped_home='../stripped/'
+stripped_home='../data/'
 
 N_run=5
 

@@ -91,13 +91,12 @@ for i_obj, obj in enumerate(object_list):
     obj.run_analyze()
     obj.traj = None # remove traj to save space
     
-    
+    file_electro =  f'./membrane_zaxis/{prefix}_{i_obj+1}_lipid_edens.dat'
+    file_D36_z = f'./membrane_zaxis/{prefix}_{i_obj+1}_D36.dat'
     try:
-        file_electro = MD_path + f'z_axis/{prefix}_{i_obj+1}_lipid_edens.dat'
         obj.get_electrodensity(file_electro)
-        file_D36_z = MD_path + f'z_axis/{prefix}_{i_obj+1}_D36.dat'
         obj.get_z_axis(file_D36_z)
-    except FileNotFoundError:
+    except:
         print(f"File not found: {file_electro}")
     pickle.dump(obj, open(obj_name,'wb'))
     print(f'Object saved as {obj_name}')
