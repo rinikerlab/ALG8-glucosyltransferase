@@ -1,3 +1,5 @@
+# Copyright (C) 2026 ETH Zurich, Shu-Yu Chen
+
 # conda activate shu_pytraj
 # clean
 

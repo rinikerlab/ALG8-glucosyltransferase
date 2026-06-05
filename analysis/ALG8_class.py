@@ -1,3 +1,4 @@
+# Copyright (C) 2026 ETH Zurich, Shu-Yu Chen
 
 import matplotlib.pyplot as plt
 import numpy as np
