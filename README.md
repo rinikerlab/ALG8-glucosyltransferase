@@ -77,6 +77,7 @@ By specifying the folder containing topology and trajectory files, all analyses 
 ```python
 bash multi_analysis.sh
 ```
+and then run all the cells in the analysis notebooks.
 
 Upon completion:
 - **Figures** are saved in the [`analysis/Figures/`](Figures/) directory.  
@@ -120,7 +121,7 @@ ALG8_project/
 ---
 
 ## Trajectories of the Published Work
-
+Raw trajectories are deposited at Zenodo: https://zenodo.org/uploads/20297714
 ---
 
 ---
