@@ -77,7 +77,7 @@ By specifying the folder containing topology and trajectory files, all analyses 
 ```python
 bash multi_analysis.sh
 ```
-and then run all the cells in the analysis notebooks.
+run analysis/pretrasnfer.ipynb and then analysis/postransfer.ipynb to produce the figures in the paper and some extra analysis.
 
 Upon completion:
 - **Figures** are saved in the [`analysis/Figures/`](Figures/) directory.  
