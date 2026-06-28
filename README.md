@@ -1,4 +1,4 @@
-# ALG8 Membrane-Embedded Mannosyltransferase Simulation and Analysis
+# ALG8 Membrane-Embedded Glycosyltransferase Simulation and Analysis
 
 (This project is an successive project from https://github.com/rinikerlab/ALG8-glycosyltransferase)
 ## Overview
