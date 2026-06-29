@@ -40,7 +40,7 @@ args    = parser.parse_args()
 prefix  = args.prefix
 MD_path = args.MD_path
 N_run   = args.N_run
-state   = args.state
+state   = 'pre-DSG' if 'DSG' in prefix else 'pre-DSM' if 'DSM' in prefix else 'post'
 take_frame = args.take_frame
 ob_path    = args.ob_path
 if not os.path.exists(ob_path): 
