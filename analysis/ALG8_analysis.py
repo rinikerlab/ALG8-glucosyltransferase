@@ -40,7 +40,7 @@ args    = parser.parse_args()
 prefix  = args.prefix
 MD_path = args.MD_path
 N_run   = args.N_run
-state   = 'pre-DSG' if 'DSG' in args.state else ('pre-DSM' if 'DSM' in args.state else 'post')
+state   = 'pre-DSG' if 'DSG' in prefix else 'pre-DSM' if 'DSM' in prefix else 'post'
 take_frame = args.take_frame
 ob_path    = args.ob_path
 if not os.path.exists(ob_path): 
@@ -55,7 +55,7 @@ if 'pre' in state:
     C_sugar  = ['C52','C53','C54','C55','C56','O43']  # Acceptor B-branch last sugar carbon
     B_sugar  = ['C58','C59','C60','C61','C52','O48']  # Acceptor C-branch last sugar carbon
     D_sugar  = ['C25','C26','C27','C28','C29','O7' ]  # Donor sugar carbon
-    donor_H  =':514@H47' if state == 'pre-DSG' else ':514@H46'
+    donor_H  =':514@H47' if state == 'pre-DSG' else ':514@H46' 
     Donor_is_substrate = True
     C_sugar_O   = ['O55','O56','O57','O59','O58']
     D_sugar_O   = ['O3','O4','O5','O6','O7']

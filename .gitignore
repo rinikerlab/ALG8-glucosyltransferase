@@ -8,6 +8,7 @@ Putative_pathway/*/*.svg
 
 # objects under analysis
 analysis/objects/
+analysis/lipid_buckling
 analysis/old_scripts
 data/
 # temperally

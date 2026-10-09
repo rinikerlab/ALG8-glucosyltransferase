@@ -9,8 +9,8 @@ N_run=5
 folders=( ALG8_pretransfer_H40d_DSG ALG8_pretransfer_H40e_DSG ALG8_pretransfer_H40d_DSM ALG8_pretransfer_H40e_DSM)
 prefix=( ALG8_pretransfer_H40d_DSG ALG8_pretransfer_DSG ALG8_pretransfer_H40d_DSM ALG8_pretransfer_DSM)
 for i in $(seq 0 3); do
-    python ./ALG8_analysis.py --MD_path "${stripped_home}/${folders[i]}/" --prefix "${prefix[i]}" --N_run $N_run --state "pre" --take_frame 6000
-    # echo "python ./ALG8_analysis.py --MD_path ${stripped_home}/${folders[i]}/ --prefix ${prefix[i]} --N_run $N_run --state pre --take_frame 4000"
+    # python ./ALG8_analysis.py --MD_path "${stripped_home}/${folders[i]}/" --prefix "${prefix[i]}" --N_run $N_run --state "pre" --take_frame 6000
+    echo "python ./ALG8_analysis.py --MD_path ${stripped_home}/${folders[i]}/ --prefix ${prefix[i]} --N_run $N_run --state pre --take_frame 4000"
 done
 
 # postransfer

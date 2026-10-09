@@ -1,6 +1,5 @@
-# ALG8 Membrane-Embedded Mannosyltransferase Simulation and Analysis
+# ALG8 Membrane-Embedded Glucosyltransferase Simulation and Analysis
 
-(This project is an successive project from https://github.com/rinikerlab/ALG8-glycosyltransferase)
 ## Overview
 This repository contains molecular dynamics (MD) simulations and trajectory analyses of the **membrane-embedded glucosyltransferase ALG8**.  
 The goal of this project is to understand the donor selectivity and key interactions of ALG8 during glycosylation.

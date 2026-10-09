@@ -21,9 +21,9 @@ A NPT simulation for common production-level simulations
     ntf=2,         ! Do not calculate forces of bonds containing hydrogen
 
     ! Control how often information is printed
-    ntpr=5000,     ! Print energies every 5000 steps
-    ntwx=1000,    ! Print coordinates every 0.25M steps (0.2ns) to the trajectory
-    ntwr=5000,     ! Print a restart file every 50K steps (can be less frequent)
+    ntpr=5000,     ! Print energies every 5K steps
+    ntwx=1000,    ! Print coordinates every 1K steps (2ps) to the trajectory
+    ntwr=5000,     ! Print a restart file every 5K steps (can be less frequent)
     ntxo=2,        ! Write NetCDF format
     ioutfm=1,      ! Write NetCDF format (always do this!)
 
